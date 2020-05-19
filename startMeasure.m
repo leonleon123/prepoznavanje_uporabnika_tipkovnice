@@ -16,10 +16,8 @@ function [timesAverage, n] = startMeasure()
             delta = a-s;
             s = a;
             keyCodeNum = find(keyCode);
-            if length(keyCodeNum) > 1
-                keyCodeNum = keyCodeNum(1);
-            end
-            fprintf('from:%d to:%d\n',lastKey,keyCodeNum);
+            keyCodeNum = keyCodeNum(1);
+            fprintf('from:%d to:%d delta:%f\n',lastKey,keyCodeNum,delta);
             if lastKey >= 0
                 i = findKey(lastKey);
                 j = findKey(keyCodeNum);
