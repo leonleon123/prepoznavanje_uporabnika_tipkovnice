@@ -1,13 +1,13 @@
-function [timesAverage] = startMeasure()
+function [timesAverage, n] = startMeasure()
     s=0;
-    tic;
     keys = [65:90, 48:57, 191, 187, 8, 9, 20, 160, 188, 190, 189, 161, 32];
-    poisci = @(a) find(keys==a);
-    casi = zeros(length(keys), length(keys));
-    n = ones(length(keys), length(keys));
+    findKey = @(a) find(keys==a);
+    times = zeros(length(keys), length(keys));
+    n = zeros(length(keys), length(keys));
     lastKey = -1;
     KbQueueCreate();
     KbQueueStart();
+    tic;
     
     while lastKey ~= 27
         [pressed, keyCode] = KbQueueCheck();
@@ -21,15 +21,15 @@ function [timesAverage] = startMeasure()
             end
             fprintf('from:%d to:%d\n',lastKey,keyCodeNum);
             if lastKey >= 0
-                i = poisci(lastKey);
-                j = poisci(keyCodeNum);
+                i = findKey(lastKey);
+                j = findKey(keyCodeNum);
                 if ~isempty(i) && ~isempty(j)
-                    casi(i,j) = casi(i,j) + delta;
+                    times(i,j) = times(i,j) + delta;
                     n(i,j) = n(i,j) + 1;
                 end
             end
             lastKey = keyCodeNum;
         end
     end
-    timesAverage = casi./n;
+    timesAverage = times./(n+(n==0));
 end
