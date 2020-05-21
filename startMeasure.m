@@ -5,11 +5,12 @@ function [timesAverage, n] = startMeasure()
     times = zeros(length(keys), length(keys));
     n = zeros(length(keys), length(keys));
     lastKey = -1;
+    lastAbsoluteKey = -1;
     KbQueueCreate();
     KbQueueStart();
     tic;
     
-    while lastKey ~= 27
+    while lastAbsoluteKey ~= 27
         [pressed, keyCode] = KbQueueCheck();
         if pressed
             keyCodeNum = find(keyCode);
@@ -27,6 +28,7 @@ function [timesAverage, n] = startMeasure()
                 end
                 lastKey = keyCodeNum;
             end
+            lastAbsoluteKey = keyCodeNum;
         end
     end
     timesAverage = times./(n+(n==0));
