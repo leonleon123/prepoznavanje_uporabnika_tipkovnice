@@ -1,5 +1,6 @@
 function main()
-    fprintf('za?enjam merjenje')
+    fprintf('starting measure\n')
     b = startMeasure();
-    b = b(:);
+    name = mainCalculate(b(:));
+    fprintf('we know who you are, %s >:)\n', name);
 end
