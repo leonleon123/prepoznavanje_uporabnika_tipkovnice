@@ -43,21 +43,19 @@ end
 % of the test matrices transformed into a column vector.
 function A = generateUserMatrix(userDir)
     A = [];
-    if userDir(1) ~= '.'
-        cd(userDir)
-        for testDirTmp=ls'
-            testDir = strtrim(testDirTmp);
-            if testDir(1) ~= '.'
-                cd(testDir)
-                for test=ls'
-                    if test(1) ~= '.'
-                        load(strtrim(test'), 'X');
-                        A = [A X(:)];
-                    end
+    cd(userDir)
+    for dataDirTmp=ls'
+        dataDir = strtrim(dataDirTmp);
+        if dataDir(1) ~= '.'
+            cd(dataDir)
+            for data=ls'
+                if data(1) ~= '.'
+                    load(strtrim(data'), 'X');
+                    A = [A X(:)];
                 end
-                cd ..
             end
+            cd ..
         end
-        cd ..
     end
+    cd ..
 end
