@@ -13,7 +13,7 @@ function main()
     % fprintf('average time from space to shift: %f\n', averageMatrix(47,42));
     % fprintf('average time from space to capslock: %f\n', averageMatrix(47,41));
     tol = 0.02;
-    if(x < tol), fprintf('could not detect\n');
+    if(x < tol), fprintf('could not identify\n');
     else, fprintf('we know who you are, %s >:)\n', name);
     end
 end
