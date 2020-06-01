@@ -4,10 +4,11 @@
 %   of the person being tested at the moment
 % output:
 %   res ... string, name of the alleged user who performed the measure
-%
+%   minNorm ... float, minimal norm for all users
+%   x ... float, nonsense detection factor
 % This is only used from main, it goes through the file structure of the
 % tests and figures out who you are.
-function res = mainCalculate(b)
+function [res, minNorm, x] = mainCalculate(b)
     cd data
     norms = [];
     names = [];
@@ -21,7 +22,8 @@ function res = mainCalculate(b)
             norms = [norms norm(U'*b - S*y)];
         end
     end
-    [~,i] = min(norms);
+    [minNorm, i] = min(norms);
+    x=1-minNorm/max(norms);
     names = names';
     res = strtrim(names(i,:));
     cd ..
