@@ -1,5 +1,14 @@
+% function res = mainCalculate(b)
+% input:
+%   b ... 47?47 matrix of averageTimes between valid keypresses
+%   of the person being tested at the moment
+% output:
+%   res ... string, name of the alleged user who performed the measure
+%
+% This is only used from main, it goes through the file structure of the
+% tests and figures out who you are.
 function res = mainCalculate(b)
-    cd tests
+    cd data
     norms = [];
     names = [];
     for userDirTmp=ls'
@@ -18,6 +27,18 @@ function res = mainCalculate(b)
     cd ..
 end
 
+% function A = generateUserMatrix(userDir)
+% input:
+%   userDir ... string, name of the user, for which the A matrix is
+%   returned
+% ouptut:
+%   A ...  2209?m matrix, where m is the number of test measures for the
+%   person userDir, columns are all the columns from test matrices stacked
+%   on top of each other.
+%
+% This goes through all folders in the directory data/userDir and concatenates
+% all the columns stacked on top of each other. Each column of A is one
+% of the test matrices transformed into a column vector.
 function A = generateUserMatrix(userDir)
     A = [];
     if userDir(1) ~= '.'
