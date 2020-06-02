@@ -1,9 +1,9 @@
 % function [timesAverage, n] = startMeasure()
 % input:
 % output:
-%   timesAverage ... 47?47 matrix of average times between two valid
+%   timesAverage ... 47x47 matrix of average times between two valid
 %   key presses
-%   n            ... 47?47 matrix of number of key pairs
+%   n            ... 47x47 matrix of number of key pairs
 %
 % Starts the measuring process with KbQueue and sums the times between
 % two valid keypresses, in the end the whole matrix is divided by the

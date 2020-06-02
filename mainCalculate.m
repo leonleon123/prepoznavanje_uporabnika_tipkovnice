@@ -1,6 +1,6 @@
 % function res = mainCalculate(b)
 % input:
-%   b ... 47?47 matrix of averageTimes between valid keypresses
+%   b ... 47x47 matrix of averageTimes between valid keypresses
 %   of the person being tested at the moment
 % output:
 %   res ... string, name of the alleged user who performed the measure
@@ -34,7 +34,7 @@ end
 %   userDir ... string, name of the user, for which the A matrix is
 %   returned
 % ouptut:
-%   A ...  2209?m matrix, where m is the number of test measures for the
+%   A ...  2209xm matrix, where m is the number of test measures for the
 %   person userDir, columns are all the columns from test matrices stacked
 %   on top of each other.
 %
