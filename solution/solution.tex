@@ -1,0 +1,73 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage[a4paper, top=20mm]{geometry}
+\usepackage{pdfpages}
+\usepackage{listings}
+
+\lstset{
+  basicstyle=\ttfamily\small, 
+  language=Matlab,
+  keywordstyle=\color{blue}
+}
+
+\begin{document}
+\title{\textbf{Prepoznavanje uporabnika tipkovnice}}
+\author{
+  Leon Modic\\
+  \and
+  Matej Miočič\\
+  \and
+  Andraž Rozman\\
+}
+\maketitle
+
+\section{Opis problema}
+
+\section{Opis matematičnega modela}
+\[
+  averageMatrix=
+  \begin{bmatrix}
+    0.0 & 0.0 & \dots 0.0\\
+    \vdots \\
+    0.0 & 0.0 & \dots 0.0\\
+  \end{bmatrix}
+\]
+\[
+  \begin{array}{c c} &
+    \begin{array}{c c c} a & b &c \\
+    \end{array}\\
+    \begin{array}{c c c}
+      p \\
+      q \\
+      r
+    \end{array}
+    &
+    \left[
+    \begin{array}{c c c}
+    .1 & .1 & 0 \\
+    .4 & 1 & 0 \\
+    .8 & 0 & .4
+    \end{array}
+    \right]
+  \end{array}
+\]
+\section{Opis programske kode}
+\begin{lstlisting}
+  A = svd([1 2 3; 3 4 5]);
+  test = "skdasd";
+  for i=[1 2 3]
+    i
+  end
+\end{lstlisting}
+
+\section{Rezultati in komentarji rezultatov}
+
+\section{Razdelitev dela v skupini}
+
+\section{Reference in dejanksa koda}
+
+\end{document}
