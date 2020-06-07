@@ -12,18 +12,20 @@ function [res, minNorm, x] = mainCalculate(b)
     cd data
     norms = [];
     names = [];
+    tol = 0.1;
     for userDirTmp=ls'
         if userDirTmp(1) ~= '.'
             userDir = strtrim(userDirTmp');
             names = [names userDirTmp];
             A = generateUserMatrix(userDir);
             [U,S,~] = svd(A);
+            S(S<tol) = 0;
             y = (U*S)\b;
             norms = [norms norm(U'*b - S*y)];
         end
     end
     [minNorm, i] = min(norms);
-    x=1-minNorm/max(norms);
+    x= 1 - minNorm/norm(b);
     names = names';
     res = strtrim(names(i,:));
     cd ..

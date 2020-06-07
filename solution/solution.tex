@@ -28,9 +28,9 @@
 \maketitle
 
 \section{Opis problema}
-Različni ljudje razvijemo različne stile tipkanja. Naloga je, napišete program,
+Različni ljudje razvijemo različne stile tipkanja. Naloga je napisati program,
 ki bo na podlagi količin, ki jih lahko izmerimo pri tipkanju (kot je časovni
-zamik med posameznimi pari znakov), prepoznal uporabnika.
+zamik med posameznimi pari znakov), prepoznal uporabnika tipkovnice.
 
 \section{Opis matematičnega modela}
 Izbrali smo 47 tipk na tipkovnici in za vsakega uporabnika smo generirali več učnih
@@ -46,7 +46,7 @@ primerov matrik povprečnih časov velikosti $47 \times 47$
   \end{bmatrix}
 \]
 
-Za vsakega izmed uporabnikov znotraj mape \texttt{data/} se generira $A_i$ matrika
+Za vsakega izmed $n$ uporabnikov znotraj mape \texttt{data/} se generira $A_i$ matrika
 (torej $A_{aljaz}$, $A_{andraz}$, $A_{leon}$, $A_{Matej}$), ki je sestavljena iz matrix povprečnih
 časov za vsa merjenja določenega uporabnika.
 \[
@@ -57,11 +57,23 @@ Za vsakega izmed uporabnikov znotraj mape \texttt{data/} se generira $A_i$ matri
 Kjer so $p_i$ $2209 \times 1$ vektorji sestavljeni iz stolpcev matrike povprečnih časov ($averageMatrix$) zloženi
 eden nad drugega. Nato naredimo SVD razcep:
 $$A_i=U_iS_iV_i^T$$
-$b$ je $2209 \times 1$ vektor sestavljen iz stolpcev matrike povprečnih časov, ki se je generirala za trenutno osebo, kateri želimo
-določiti ime.
 $$U_iS_iy_i = b \rightarrow y_i = (U_iS_i)^+b$$
-$$min(||b-A_ix||) = min(||U_i^Tb-S_iy_i||)$$
+$$y_i = V_i^Tx$$
+$b$ je $2209 \times 1$ vektor sestavljen iz stolpcev matrike povprečnih časov, ki se je generirala za trenutno osebo, 
+kateri želimo določiti ime. Ime domnevne osebe smo določili tako, da smo posikali najmanšo normo $||b-A_ix||$ in vrnili
+ime na mestu $i$.
+$$\min\limits_{0\le i<n}(||b-A_ix||) = \min\limits_{0\le i<n}(||U_i^Tb-S_iy_i||)$$
+To velja ker če naredimo SVD razcep matrike $A_i$ ugotivimo
+$$b-A_ix = b-U_iS_iV_i^Tx$$
+In če nato pomnožimo celoten izraz z $U_i^T$ dobimo
+$$U_i^Tb-U_i^TU_iS_iV_i^Tx = U_i^Tb-S_iV_i^Tx = U_i^Tb-S_iy_i$$
+V drugem členu se $U_i^TU_i$ pokrajša, ker je $U_i$ ortogonalna matrika in velja $U_i^TU_i=I$. Na koncu pa 
+po definiciji $y_i$ nadomestimo $V_i^Tx$ z $y_i$. Ker je $V_i$ tudi ortogonalna matrika, lahko iz $y_i = V_i^Tx$
+sklepamo da sta normi $|x_i|$ in $|y_i|$ enaki, saj ortogonalne matrike spreminjajo le smer vektorjev, ne  
+pa njihovih norm.
 
+Za vsakega uporabnika dodamo normo (z uporabnikovo $A_i$ matriko) v seznam na mesto $i$, in izmed teh norm nato izberemo
+$i$ najmanjše.  
 \[
   names = \begin{bmatrix}
     "aljaz"\\
@@ -76,6 +88,8 @@ $$min(||b-A_ix||) = min(||U_i^Tb-S_iy_i||)$$
     1.35
   \end{bmatrix}
 \]
+V tem primeru bi torej bil indeks najmanjše norme 1 in naš program bi vrnil $"aljaz"$ kot ime prepoznanega uporabnika.
+
 \section{Opis programske kode}
 V našem projektu smo naredili dve funkciji za uporabnike: \textbf{\textit{main}} in \textit{saveMeasure}. 
 S klicem funkcije \textit{main} uporabnik prične postopek ustvarjanja matrike, ki ga konča s pritiskom 
@@ -94,7 +108,7 @@ vrne matriko, jo funkcija\textit{ saveMeasure} shrani v prej omenjeno mapo.
 Funkcija \textbf{\textit{startMeasure}} ne sprejme nobenega argumenta.
 Najprej ustvari tabelo veljavnih tipk, \textit{keys}.
 To so črke angleške abecede, številke, ... Vse veljavne tipke so vidne na spodnji sliki (slika 1).
-Ker je vseh veljavnih tipk 47, funkcija inicializira dve 47x47 matriki. 
+Ker je vseh veljavnih tipk 47, funkcija inicializira dve $47\times 47$ matriki. 
 Prva (\textit{times}) beleži vsoto časovnih razlik med pritiski dveh tipk, druga (\textit{n}) pa število teh pritiskov. 
 Glavna while zanka funkcije se izvaja dokler ne pritisnemo tipke \textit{escape}. 
 Na začetku vsake iteracije kličemo funkcijo \textit{KbQueueCheck}, ki vrne informacijo če je bil zaznan pritisk tipke, 
@@ -105,7 +119,7 @@ preslikamo kodo tipke v indeks tipke znotraj tabele \textit{keys}. Če je presli
 ter zadnje tipke veljavna, zabeležimo pritisk kombinacije teh dveh tipk in izračunamo ter prištejemo časovno 
 razliko med tem in zadnjim pritiskom. Ko zaključimo while zanko izračunamo matriko povprečnih časov med dvema 
 tipkama, timesAverage, ki jo funkcija tudi vrne, z naslednjim ukazom (ki tudi prepreči deljenje z 0): 
-timesAverage = times./(n+(n==0))
+timesAverage = times./(n+(n==0)).
 
 \begin{figure}[h]
   \centering
@@ -115,33 +129,34 @@ timesAverage = times./(n+(n==0))
 \end{figure}
 
 \pagebreak
-Struktura je razvidna v funkciji mainCalculate. Na začetku se premaknemo v mapo data, ki vsebuje mape z imeni oseb, 
-ki so sodelovali pri projektu. To pomeni, da so pretipkali določen tekst in shranili matriko s funkcijo saveMeasure.\\
+Za shranjevanje učnih datotek smo se odločili za posebno strukturo map in datotek, ki je razvidna v funkciji 
+\textbf{\textit{mainCalculate}}. Na začetku se premaknemo v mapo data, ki vsebuje mape z imeni oseb, 
+ki so sodelovali pri projektu. To pomeni, da so pretipkali določen tekst in shranili matriko s funkcijo \textbf{\textit{saveMeasure}}.\\
 \newline
-Nato se z zankami premikamo po mapah. S prvo zanko shranimo ime lastnika testov v spremenljivko userDirTemp z ukazom ls. 
-Spremenljivko še transponiramo, da dobimo imena v vrsticah. Nato odstranimo presledke in imena dodamo v matriko 
+Nato se z zankami premikamo po mapah. S prvo zanko shranimo ime lastnika testov v spremenljivko \textit{userDirTemp} 
+z ukazom \textit{ls}. Spremenljivko še transponiramo, da dobimo imena v vrsticah. Nato odstranimo presledke in imena dodamo v matriko 
 names za kasnejšo uporabo.\\
 \newline
-Potem generiramo matriko A. Matrika je 2209 x m (kjer m predstavlja število testnih primerov), ki vsebuje meritve s 
+Potem generiramo matriko A. Matrika je velikosti $2209 \times m$ (kjer m predstavlja število testnih primerov), ki vsebuje meritve s 
 povprečnimi časi med tipkami.\\
 \newline
-Kako jo naredimo? \\
-\newline
-Podobno kot prej se z zankami najprej premaknemo v mapo z imeni. Nato se premaknemo v mapo, ki vsebuje teste, 
-glede na besedilo. Še z zadnjo zanko pa naložimo test (matriko 47x47) v spremenljivko X. X nato pretvorimo v vektor 
+Podobno kot prej se z zankami najprej premaknemo v mapo z imeni. Nato se premaknemo v mapo, ki vsebuje učne datoteke, 
+glede na besedilo. Še z zadnjo zanko pa naložimo učno datoteko (matriko $47\times 47$) v spremenljivko X. X nato pretvorimo v vektor 
 in dodamo k matriki A. \\
 \newline
-Ko dobimo matirko A za enega izmed tesnih oseb, naredimo SVD razcep in vstavljamo stvari v enačbo.
+Ko dobimo matirko A za enega izmed testnih oseb, naredimo SVD razcep in vstavljamo stvari v enačbo.
 
 \section{Rezultati in komentarji rezultatov}
 Uspešne rezultate smo dobivali že v začetku izdelave projekta. Najprej smo si izbrali besedilo dolgo 
 približno 1000 znakov. Vsak izmed udeležencev ga je prepisal petkrat. Tako smo imeli shranjenih 15 testnih 
 matrik. Ko smo testirali program na istem besedilu (pretipkali smo isto besedilo), nas je program prepoznal. 
-Probali smo tudi na drugih besedilih, vendar smo dobili malo manj zanesljive odgovore. \\
+Poizkusili smo tudi na drugih besedilih, vendar smo dobili malo manj zanesljive odgovore. \\
 \newline
-Sklenili smo, da bomo dodali več testnih matrik, tokrat z različnimi besedili. Dodali smo še 8 različnih besedil, s povprečno 500 znaki vsak. Tokrat smo prepisali vsako besedilo samo enkrat. Dobili smo zelo pozitivne rezultate, saj nas je program zanesljivo prepoznal po treh stavkih. \\
+Sklenili smo, da bomo dodali več testnih matrik, tokrat z različnimi besedili. Dodali smo še 8 različnih besedil, 
+s povprečno 500 znaki vsak. Tokrat smo prepisali vsako besedilo samo enkrat. Dobili smo zelo pozitivne rezultate, 
+saj nas je program zanesljivo prepoznal po treh stavkih. \\
 \newline
-Razumljivo pa je, da bo program ne bo vedel, kdo je uporabnik tipkovnice, če prepišemo prekratko besedilo, zato bo 
+Razumljivo pa je, da program ne bo zanesljivo prepoznal uporabnika tipkovnice, če prepišemo prekratko besedilo, in bo 
 vračal različne odgovore, tudi če ga prepiše ista oseba:
 \begin{figure}[h]
              \centering
@@ -156,8 +171,8 @@ vračal različne odgovore, tudi če ga prepiše ista oseba:
 \end{figure}
 
 \section{Razdelitev dela v skupini}
-Večinoma smo vso kodo pisali tako, da je tisti, ki je delil zalson dejansko tipkal,
-skupaj pa smo razmišljali kaj na se napiše. 
+Večinoma smo vso kodo pisali tako, da je tisti, ki je delil zaslon dejansko tipkal,
+skupaj pa smo razmišljali kaj naj se napiše. 
 \section{Reference in dejanksa koda}
 \href{https://github.com/leonleon123/prepoznavanje_uporabnika_tipkovnice}{Github}
 \end{document}
