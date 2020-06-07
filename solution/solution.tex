@@ -17,13 +17,15 @@
 }
 
 \begin{document}
-\title{\textbf{Prepoznavanje uporabnika tipkovnice}}
+\title{\textbf{Prepoznavanje uporabnika tipkovnice \\ \large{Matematično modeliranje}}}
 \author{
   Leon Modic\\
   \and
   Matej Miočič\\
   \and
   Andraž Rozman\\
+  \and
+  Mentor: \textit{doc. dr. Aljaž Zalar}
 }
 \maketitle
 
@@ -33,10 +35,10 @@ ki bo na podlagi količin, ki jih lahko izmerimo pri tipkanju (kot je časovni
 zamik med posameznimi pari znakov), prepoznal uporabnika tipkovnice.
 
 \section{Opis matematičnega modela}
-Izbrali smo 47 tipk na tipkovnici in za vsakega uporabnika smo generirali več učnih
+Izbrali smo 47 tipk na tipkovnici in za vsakega uporabnika smo ustvarili več učnih
 primerov matrik povprečnih časov velikosti $47 \times 47$
 \[
-  averageMatrix^{47 \times 47}=
+  timesAverage^{47 \times 47}=
   \begin{bmatrix}
     0.1301 & 0.0 & \dots & 0.0 & 0.0\\
     0.0 & 0.0 & \dots & 0.0 & 0.0\\
@@ -46,7 +48,7 @@ primerov matrik povprečnih časov velikosti $47 \times 47$
   \end{bmatrix}
 \]
 
-Za vsakega izmed $n$ uporabnikov znotraj mape \texttt{data/} se generira $A_i$ matrika
+Za vsakega izmed $n$ uporabnikov znotraj mape \texttt{data/} se ustvarili $A_i$ matriko
 (torej $A_{aljaz}$, $A_{andraz}$, $A_{leon}$, $A_{Matej}$), ki je sestavljena iz matrix povprečnih
 časov za vsa merjenja določenega uporabnika.
 \[
@@ -54,7 +56,7 @@ Za vsakega izmed $n$ uporabnikov znotraj mape \texttt{data/} se generira $A_i$ m
     p_1 & p_2 & \dots & p_m
   \end{bmatrix}
 \]
-Kjer so $p_i$ $2209 \times 1$ vektorji sestavljeni iz stolpcev matrike povprečnih časov ($averageMatrix$) zloženi
+Kjer so $p_i$ $2209 \times 1$ vektorji sestavljeni iz stolpcev matrike povprečnih časov ($timesAverage$) zloženi
 eden nad drugega. Nato naredimo SVD razcep:
 $$A_i=U_iS_iV_i^T$$
 $$U_iS_iy_i = b \rightarrow y_i = (U_iS_i)^+b$$
@@ -72,7 +74,7 @@ po definiciji $y_i$ nadomestimo $V_i^Tx$ z $y_i$. Ker je $V_i$ tudi ortogonalna 
 sklepamo da sta normi $|x_i|$ in $|y_i|$ enaki, saj ortogonalne matrike spreminjajo le smer vektorjev, ne  
 pa njihovih norm.
 
-Za vsakega uporabnika dodamo normo (z uporabnikovo $A_i$ matriko) v seznam na mesto $i$, in izmed teh norm nato izberemo
+Za vsakega uporabnika dodamo normo (z uporabnikovo $A_i$ matriko) v seznam norm na mesto $i$, in izmed teh norm nato izberemo
 $i$ najmanjše.  
 \[
   names = \begin{bmatrix}
@@ -88,7 +90,9 @@ $i$ najmanjše.
     1.35
   \end{bmatrix}
 \]
-V tem primeru bi torej bil indeks najmanjše norme 1 in naš program bi vrnil $"aljaz"$ kot ime prepoznanega uporabnika.
+V tem primeru bi torej bil indeks najmanjše norme 1 in naš program bi vrnil $"aljaz"$ kot ime prepoznanega uporabnika.\\
+\newline
+Vse vrednosti v tem poglavju so naključne in so tu zgolj za ralago na primeih.
 
 \section{Opis programske kode}
 V našem projektu smo naredili dve funkciji za uporabnike: \textbf{\textit{main}} in \textit{saveMeasure}. 
@@ -131,20 +135,27 @@ timesAverage = times./(n+(n==0)).
 \pagebreak
 Za shranjevanje učnih datotek smo se odločili za posebno strukturo map in datotek, ki je razvidna v funkciji 
 \textbf{\textit{mainCalculate}}. Na začetku se premaknemo v mapo data, ki vsebuje mape z imeni oseb, 
-ki so sodelovali pri projektu. To pomeni, da so pretipkali določen tekst in shranili matriko s funkcijo \textbf{\textit{saveMeasure}}.\\
+ki so sodelovali pri projektu. To pomeni, da so pretipkali določen tekst in shranili matriko s funkcijo 
+\textbf{\textit{saveMeasure}}.\\
 \newline
 Nato se z zankami premikamo po mapah. S prvo zanko shranimo ime lastnika testov v spremenljivko \textit{userDirTemp} 
-z ukazom \textit{ls}. Spremenljivko še transponiramo, da dobimo imena v vrsticah. Nato odstranimo presledke in imena dodamo v matriko 
-names za kasnejšo uporabo.\\
+z ukazom \textit{ls}. Spremenljivko še transponiramo, da dobimo imena v vrsticah. Nato odstranimo presledke in imena 
+dodamo v matriko names za kasnejšo uporabo.\\
 \newline
-Potem generiramo matriko A. Matrika je velikosti $2209 \times m$ (kjer m predstavlja število testnih primerov), ki vsebuje meritve s 
-povprečnimi časi med tipkami.\\
+Potem generiramo matriko $A_i$. Matrika je velikosti $2209 \times m$ (kjer m predstavlja število testnih primerov), ki 
+vsebuje meritve s povprečnimi časi med tipkami.\\
 \newline
 Podobno kot prej se z zankami najprej premaknemo v mapo z imeni. Nato se premaknemo v mapo, ki vsebuje učne datoteke, 
-glede na besedilo. Še z zadnjo zanko pa naložimo učno datoteko (matriko $47\times 47$) v spremenljivko X. X nato pretvorimo v vektor 
-in dodamo k matriki A. \\
+glede na besedilo. Še z zadnjo zanko pa naložimo učno datoteko (matriko $47\times 47$) v spremenljivko X. X nato pretvorimo 
+v vektor in dodamo k matriki $A_i$. \\
 \newline
-Ko dobimo matirko A za enega izmed testnih oseb, naredimo SVD razcep in vstavljamo stvari v enačbo.
+Ko dobimo matirko $A_i$ za enega izmed testnih oseb, naredimo SVD razcep, izračunamo normo $||U_i^Tb-S_iy_i||$ 
+in le-to dodamo v seznam norm. V $S_i$ matriki gledamo le vrednosti večje od dolčene tolerance (po nekaj poizkušanja smo
+prišli do zaključka da 0.1 deluje dovolj v redu). \\
+\newline
+Funkcija pa poleg imena vrača tudi \textit{relError}, ki je relativna napaka $1-\frac{||U_i^Tb-S_iy_i||}{||b||}$ 
+in s pomočjo le te lahko program določi če oseba, ki piše ni v
+učnem naboru in/ali tipkanje nima smiselne matrike povprečnih časov.
 
 \section{Rezultati in komentarji rezultatov}
 Uspešne rezultate smo dobivali že v začetku izdelave projekta. Najprej smo si izbrali besedilo dolgo 
@@ -173,6 +184,14 @@ vračal različne odgovore, tudi če ga prepiše ista oseba:
 \section{Razdelitev dela v skupini}
 Večinoma smo vso kodo pisali tako, da je tisti, ki je delil zaslon dejansko tipkal,
 skupaj pa smo razmišljali kaj naj se napiše. 
-\section{Reference in dejanksa koda}
-\href{https://github.com/leonleon123/prepoznavanje_uporabnika_tipkovnice}{Github}
+\section{Reference in Github repozitorij}
+Vso kodo smo sproti shranjevali v 
+\href{https://github.com/leonleon123/prepoznavanje_uporabnika_tipkovnice}{Github} repozitorij.\\
+\newline
+Reference:
+\begin{itemize}
+  \item \url{http://psychtoolbox.org/docs/Psychtoolbox.html}
+  \item \url{https://ucilnica.fri.uni-lj.si/pluginfile.php/28073/mod_page/content/81/A43-prepoznavanjestevk.pdf}
+  \item \url{https://ucilnica.fri.uni-lj.si/pluginfile.php/28073/mod_page/content/81/A411-prepoznava_uporabnika.pdf}
+\end{itemize}
 \end{document}

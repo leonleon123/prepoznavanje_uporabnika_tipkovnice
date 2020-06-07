@@ -5,10 +5,10 @@
 % output:
 %   res ... string, name of the alleged user who performed the measure
 %   minNorm ... float, minimal norm for all users
-%   x ... float, nonsense detection factor
+%   relError ... float, nonsense detection factor
 % This is only used from main, it goes through the file structure of the
 % tests and figures out who you are.
-function [res, minNorm, x] = mainCalculate(b)
+function [res, relError] = mainCalculate(b)
     cd data
     norms = [];
     names = [];
@@ -25,7 +25,7 @@ function [res, minNorm, x] = mainCalculate(b)
         end
     end
     [minNorm, i] = min(norms);
-    x= 1 - minNorm/norm(b);
+    relError = 1 - minNorm/norm(b);
     names = names';
     res = strtrim(names(i,:));
     cd ..
