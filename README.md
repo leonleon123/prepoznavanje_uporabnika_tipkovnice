@@ -7,11 +7,11 @@ Navodila za uporabo (Matlab only):
 
 3. Dodajte svoje podatke učne podatke in poženite funkcijo saveMeasure(user, text, i) - kjer
         user predstavlja ime uporabnika,
-        text predstavlja ime texta (sedaj se kar omejimo na  GNU_Linux.txt) in
+        text predstavlja ime texta (sedaj se kar omejimo na  GNU_Linux) in
         i predstavlja številko testa.
             Primer za 2 različna testa: 
-                    a) saveMeasure("Matej",  "GNU_Linux.txt", 1)
-                    b) saveMeasure("Matej",  "GNU_Linux.txt", 2)
+                    a) saveMeasure("Matej",  "GNU_Linux", 1)
+                    b) saveMeasure("Matej",  "GNU_Linux", 2)
         
    Matrika se bo shranila v mapo "tests", in ustrezno mapo, kateri ime je enako user.
 
