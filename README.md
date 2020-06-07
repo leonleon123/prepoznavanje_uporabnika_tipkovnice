@@ -3,7 +3,7 @@ Navodila za uporabo (Matlab only):
 
 1. Naložiti si je potrebno psychtoolbox, dostopen na naslednjem linku: http://psychtoolbox.org/download.html
 
-2. Najprej vam svetujem, da si kar kopirate vsebino zip-a, v določeno mapo in se z matlabom premaknete tja.
+2. Naložite si matlab funkcije v določeno mapo in se z premaknite tja.
 
 3. Dodajte svoje podatke učne podatke in poženite funkcijo saveMeasure(user, text, i) - kjer
         user predstavlja ime uporabnika,
