@@ -26,48 +26,68 @@
 \maketitle
 
 \section{Opis problema}
-
+Različni ljudje razvijemo različne stile tipkanja. Naloga je, napišete program,
+ki bo na podlagi količin, ki jih lahko izmerimo pri tipkanju (kot je časovni
+zamik med posameznimi pari znakov), prepoznal uporabnika.
 \section{Opis matematičnega modela}
+Izbrali smo 47 tipk na tipkovnici in za vsakega uporabnika smo generirali več učnih
+primerov matrik povprečnih časov velikosti $47 \times 47$
 \[
-  averageMatrix=
+  averageMatrix^{47 \times 47}=
   \begin{bmatrix}
-    0.0 & 0.0 & \dots 0.0\\
-    \vdots \\
-    0.0 & 0.0 & \dots 0.0\\
+    0.1301 & 0.0 & \dots & 0.0 & 0.0\\
+    0.0 & 0.0 & \dots & 0.0 & 0.0\\
+    \vdots & & & \vdots\\
+    0.0 & 0.122 & \dots & 0.0 & 0.1\\
+    0.0 & 0.0 & \dots & 0.735 & 0.0\\
   \end{bmatrix}
 \]
+
+Za vsakega izmed uporabnikov znotraj mape \texttt{data/} se generira $A_i$ matrika
+(torej $A_{aljaz}$, $A_{andraz}$, $A_{leon}$, $A_{Matej}$), ki je sestavljena iz matrix povprečnih
+časov za vsa merjenja določenega uporabnika.
 \[
-  \begin{array}{c c} &
-    \begin{array}{c c c} a & b &c \\
-    \end{array}\\
-    \begin{array}{c c c}
-      p \\
-      q \\
-      r
-    \end{array}
-    &
-    \left[
-    \begin{array}{c c c}
-    .1 & .1 & 0 \\
-    .4 & 1 & 0 \\
-    .8 & 0 & .4
-    \end{array}
-    \right]
-  \end{array}
+  A_i = \begin{bmatrix}
+    p_1 & p_2 & \dots & p_m
+  \end{bmatrix}
+\]
+Kjer so $p_i$ $2209 \times 1$ vektorji sestavljeni iz stolpcev matrike povprečnih časov ($averageMatrix$) zloženi
+eden nad drugega. Nato naredimo SVD razcep:
+$$A_i=U_iS_iV_i^T$$
+$b$ je $2209 \times 1$ vektor sestavljen iz stolpcev matrike povprečnih časov, ki se je generirala za trenutno osebo, kateri želimo
+določiti ime.
+$$U_iS_iy_i = b \rightarrow y_i = (U_iS_i)^+b$$
+$$min(||b-A_ix||) = min(||U_i^Tb-S_iy_i||)$$
+
+\[
+  names = \begin{bmatrix}
+    "aljaz"\\
+    "andraz"\\
+    "leon"\\
+    "Matej"
+  \end{bmatrix},
+  norms = \begin{bmatrix}
+    1.92\\
+    1.2\\
+    1.44\\
+    1.35
+  \end{bmatrix}
 \]
 \section{Opis programske kode}
-\begin{lstlisting}
-  A = svd([1 2 3; 3 4 5]);
-  test = "skdasd";
-  for i=[1 2 3]
-    i
-  end
-\end{lstlisting}
+Izbrali smo naslednih 47 tipk katere beležimo v matriko povprečnih časov
+% \begin{lstlisting}
+%   A = svd([1 2 3; 3 4 5]);
+%   test = "skdasd";
+%   for i=[1 2 3]
+%     i
+%   end
+% \end{lstlisting}
 
 \section{Rezultati in komentarji rezultatov}
 
 \section{Razdelitev dela v skupini}
-
+Večinoma smo vso kodo pisali tako, da je tisti, ki je delil zalson dejansko tipkal,
+skupaj pa smo razmišljali kaj na se napiše. 
 \section{Reference in dejanksa koda}
 
 \end{document}
