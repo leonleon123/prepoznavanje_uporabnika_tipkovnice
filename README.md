@@ -13,7 +13,7 @@ Navodila za uporabo (Matlab only):
                     a) saveMeasure("Matej",  "GNU_Linux.txt", 1)
                     b) saveMeasure("Matej",  "GNU_Linux.txt", 2)
         
-Matrika se bo shranila v mapo "tests", in ustrezno mapo, kateri ime je enako user.
+   Matrika se bo shranila v mapo "tests", in ustrezno mapo, kateri ime je enako user.
 
 4.  Takoj ko v consoli poženete saveMeasure(user, text, i), se bo začelo izvajanje merjenje tipk, zato vtipkajte samo priložen txt. 
     Merjenje poteka tudi, če vi prepisujete txt kam drugam (npr. txt editor ali word - samo bodite pozorni, da ne uporabite kakšnih         "shortcutov" kot npr Alt + Tab ko zamenjate okna, vendar to naredite z miško)
